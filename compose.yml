@@ -1,0 +1,22 @@
+services:
+  image-captioning-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./app:/app/app
+      - ./models:/data/models/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    environment:
+      - HF_ENDPOINT=https://hf-mirror.com
+      - HTTPS_PROXY=http://192.168.1.200:7890
+      - HTTP_PROXY=http://192.168.1.200:7890
+      - NO_PROXY=localhost,127.0.0.1
